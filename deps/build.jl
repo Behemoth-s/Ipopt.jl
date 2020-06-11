@@ -105,7 +105,12 @@ if typeof(this_platform)==Windows && this_platform.compiler_abi.gcc_version == :
 end
 
 function update_product(product::LibraryProduct, library_path, binary_path)
-    LibraryProduct(library_path, product.libnames, product.variable_name)
+    product = LibraryProduct(library_path, product.libnames, product.variable_name)
+    # compatible with dll generate by coinbrew & msvc
+    if ~satisfied(product)
+        product = LibraryProduct(library_path, "ipopt", product.variable_name)
+    end
+    return product
 end
 
 function update_product(product::ExecutableProduct, library_path, binary_path)
